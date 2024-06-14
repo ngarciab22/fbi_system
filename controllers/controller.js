@@ -22,7 +22,7 @@ export const login = (req, res) => {
         })
         .render('hiperenlace', { email });
     } else {
-      res.status(401).send("Invalid email or password");
+      res.status(401).send("No esta autorizado");
     }
   } catch (error) {
     res.status(500).send(error);
@@ -34,7 +34,7 @@ export const dashboard = (req, res) => {
     const { token } = req.cookies;
     const { email, password } = jwt.verify(token, secretKey);
     if (!email || !password) {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).send("No esta autorizado");
     }
     res.render("dashboard", { email });
   } catch (error) {
