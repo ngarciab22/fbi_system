@@ -4,7 +4,7 @@ import { results } from "../data/agentes.js";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 export const loginPage = (req, res) => {
-  res.render("login");
+  res.render("login", { title: "Login" });
 };
 
 export const login = (req, res) => {
@@ -14,15 +14,18 @@ export const login = (req, res) => {
       (a) => a.email === email && a.password === password
     );
     if (agente) {
-      const token = jwt.sign({ email, password }, secretKey, { expiresIn: 120 });
+      const token = jwt.sign({ email, password }, secretKey, {
+        expiresIn: 120,
+      });
 
-      res.cookie("token", token, {
+      res
+        .cookie("token", token, {
           httpOnly: true,
           maxAge: 120000,
         })
-        .render('hiperenlace', { email });
+        .render("hiperenlace", { email, title: "Welcome" });
     } else {
-      res.status(401).send("No esta autorizado");
+      res.status(401).send("No estás autorizado para ingresar");
     }
   } catch (error) {
     res.status(500).send(error);
@@ -34,11 +37,11 @@ export const dashboard = (req, res) => {
     const { token } = req.cookies;
     const { email, password } = jwt.verify(token, secretKey);
     if (!email || !password) {
-      return res.status(401).send("No esta autorizado");
+      return res.status(401).send("No estás autorizado para ingresar"); 
     }
-    res.render("dashboard", { email });
+    res.render("dashboard", { email, title: "Dashboard"
+    });
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
